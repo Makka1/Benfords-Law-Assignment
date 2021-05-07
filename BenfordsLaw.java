@@ -120,7 +120,7 @@ class BenfordsLaw{
         // Total rows in csv file
         int total = 1620;
 
-        System.out.println("Results:");
+        System.out.println("Result:");
         for (int i = 1; i < count.length; i++){
             double percent = (count[i] * 100.0) / total;
 
