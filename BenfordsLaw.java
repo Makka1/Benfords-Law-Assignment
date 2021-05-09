@@ -27,12 +27,16 @@ class BenfordsLaw{
 
         // Array of first digit counts in the file
         int[] count = countLeadingDigits(scnr);
+
+        // End message
+        String endProgram = "End of program";
         
         // Prompt user to continue program/load file or quit program
         Scanner reader = new Scanner(System.in);
         System.out.println("Enter y to read file or n to quit:"); 
         String start = reader.nextLine();
         if (start.equals("y")){
+            // Prompt user to check for fraud or quit program
             System.out.println("Enter y to check for possible accounting fraud or n to quit:");
             String fraudCheck = reader.nextLine(); 
             if (fraudCheck.equals("y")){
@@ -40,11 +44,11 @@ class BenfordsLaw{
                 printTable(count); 
             }
             else if (start.equals("n")){
-                System.out.println("End of program");
+                System.out.println(endProgram);
             }
         }
         else if (start.equals("n")){
-            System.out.println("End of program");
+            System.out.println(endProgram);
         }
 
         // Invalid user response, prompt until valid
@@ -54,8 +58,10 @@ class BenfordsLaw{
                 System.out.println("Enter y to read file or n to quit:"); 
                 start = reader.nextLine();
                 if (start.equals("y")){
+                    // Prompt user to check for fraud or quit program
                     System.out.println("Enter y to check for possible accounting fraud or n to quit:"); 
                     String fraudCheck = reader.nextLine(); 
+                    // Invalid user response, prompt until valid
                     while (!fraudCheck.equals("y") && !fraudCheck.equals("n")){
                         System.out.println("Invalid input. Try again");
                         System.out.println("Enter y to check for possible accounting fraud or n to quit:");
@@ -65,14 +71,14 @@ class BenfordsLaw{
                             printTable(count); 
                         }
                         else if (fraudCheck.equals("n")){
-                            System.out.println("End of program");
+                            System.out.println(endProgram);
                             break;
                         }
                     }
                 }
                 else if (start.equals("n")){
-                    System.out.println("End of program");
-                    break;
+                    System.out.println(endProgram);
+                    
                 }
             }
         }
@@ -170,7 +176,7 @@ class BenfordsLaw{
 
         // Loops through array of first digits and calculates each percentage
         for (int i = 1; i < count.length; i++){
-            double percent = (count[i] * 100.0) / 1620;
+            double percent = (count[i] * 100.0) / 1620; // 1620 is the total # of rows
             double percentRounded = Math.round(percent * 10) / 10.0; // Rounds % one decimal place
             out.println(i + " = " + percentRounded + "%");
         }   
