@@ -9,6 +9,7 @@
 import java.io.File;
 import java.io.FileNotFoundException; 
 import java.util.Scanner;
+import java.io.PrintWriter;
 
 class BenfordsLaw{
     public static void main(String[] args) throws FileNotFoundException{
@@ -29,10 +30,18 @@ class BenfordsLaw{
         
         // Prompt user to continue program/load file or quit program
         Scanner reader = new Scanner(System.in);
-        System.out.println("Enter y to continue or n to quit:");
+        System.out.println("Enter y to read file or n to quit:"); 
         String start = reader.nextLine();
         if (start.equals("y")){
-            resultsOfFile(count);
+            System.out.println("Enter y to check for possible accounting fraud or n to quit:");
+            String fraudCheck = reader.nextLine(); 
+            if (fraudCheck.equals("y")){
+                resultsOfFile(count);
+                printTable(count); 
+            }
+            else if (start.equals("n")){
+                System.out.println("End of program");
+            }
         }
         else if (start.equals("n")){
             System.out.println("End of program");
@@ -42,10 +51,24 @@ class BenfordsLaw{
         else{
             while(!start.equals("y") && !start.equals("n")){
                 System.out.println("Invalid input. Try again");
-                System.out.println("Enter y to continue or n to quit:");
+                System.out.println("Enter y to read file or n to quit:"); 
                 start = reader.nextLine();
                 if (start.equals("y")){
-                    resultsOfFile(count);
+                    System.out.println("Enter y to check for possible accounting fraud or n to quit:"); 
+                    String fraudCheck = reader.nextLine(); 
+                    while (!fraudCheck.equals("y") && !fraudCheck.equals("n")){
+                        System.out.println("Invalid input. Try again");
+                        System.out.println("Enter y to check for possible accounting fraud or n to quit:");
+                        fraudCheck = reader.nextLine();
+                        if (fraudCheck.equals("y")){
+                            resultsOfFile(count);
+                            printTable(count); 
+                        }
+                        else if (fraudCheck.equals("n")){
+                            System.out.println("End of program");
+                            break;
+                        }
+                    }
                 }
                 else if (start.equals("n")){
                     System.out.println("End of program");
@@ -110,7 +133,7 @@ class BenfordsLaw{
     
     /*
      * Author: Tiffany Liang
-     * Shows the percentage for each leading digit (1-9)
+     * Calculates each first digit's frequency percentage and number of occurences, then prints if fraud has likely occured or not
      * @param count - the array of counts for each first digit that occurs in the file
      * no return
      * */
@@ -121,6 +144,7 @@ class BenfordsLaw{
         int total = 1620;
 
         System.out.println("Result:");
+        // Loops through array of first digits and calculates each percentage
         for (int i = 1; i < count.length; i++){
             double percent = (count[i] * 100.0) / total;
 
@@ -129,5 +153,28 @@ class BenfordsLaw{
                 System.out.println("Fraud has likely NOT occured");
             }
         }
+    }
+
+    /*
+     * Author: Tiffany Liang
+     * Iterates through array, takes in the percentage for each first digit, then prints it out as a table to results.csv file 
+     * @param count - the array of counts for each first digit that occurs in the file
+     * no return
+     * */
+    public static void printTable(int[] count) throws FileNotFoundException{
+        // Create file instance to reference the file
+        File data = new File("results.csv");
+
+        // "Sends out" the data into the csv file
+        PrintWriter out = new PrintWriter(data);
+
+        // Loops through array of first digits and calculates each percentage
+        for (int i = 1; i < count.length; i++){
+            double percent = (count[i] * 100.0) / 1620;
+            double percentRounded = Math.round(percent * 10) / 10.0; // Rounds % one decimal place
+            out.println(i + " = " + percentRounded + "%");
+        }   
+        System.out.println("Table has been generated");
+        out.close();
     }
 }
