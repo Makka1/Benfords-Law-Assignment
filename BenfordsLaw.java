@@ -10,9 +10,24 @@ import java.io.File;
 import java.io.FileNotFoundException; 
 import java.util.Scanner;
 import java.io.PrintWriter;
+//Importing JavaFX applications 
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-class BenfordsLaw{
-    public static void main(String[] args) throws FileNotFoundException{
+public class BenfordsLaw extends Application {
+
+    @Override
+    public void start(Stage stage) throws Exception{
+
+        String fraudCheck = "";
+        double[] takeInput = new double[9];
+
         System.out.println("Sales Analysis System");
         System.out.println(); 
 
@@ -38,10 +53,13 @@ class BenfordsLaw{
         if (start.equals("y")){
             // Prompt user to check for fraud or quit program
             System.out.println("Enter y to check for possible accounting fraud or n to quit:");
-            String fraudCheck = reader.nextLine(); 
+            fraudCheck = reader.nextLine(); 
             if (fraudCheck.equals("y")){
-                resultsOfFile(count);
+                takeInput = resultsOfFile(count);
                 printTable(count); 
+            }
+            else if (fraudCheck.equals("n")){
+                System.out.println(endProgram);
             }
             else if (start.equals("n")){
                 System.out.println(endProgram);
@@ -60,14 +78,14 @@ class BenfordsLaw{
                 if (start.equals("y")){
                     // Prompt user to check for fraud or quit program
                     System.out.println("Enter y to check for possible accounting fraud or n to quit:"); 
-                    String fraudCheck = reader.nextLine(); 
+                    fraudCheck = reader.nextLine(); 
                     // Invalid user response, prompt until valid
                     while (!fraudCheck.equals("y") && !fraudCheck.equals("n")){
                         System.out.println("Invalid input. Try again");
                         System.out.println("Enter y to check for possible accounting fraud or n to quit:");
                         fraudCheck = reader.nextLine();
                         if (fraudCheck.equals("y")){
-                            resultsOfFile(count);
+                            takeInput = resultsOfFile(count);
                             printTable(count); 
                         }
                         else if (fraudCheck.equals("n")){
@@ -82,6 +100,43 @@ class BenfordsLaw{
                 }
             }
         }
+
+        if ((start.equals("y") && (fraudCheck.equals("y")))) {
+            stage.setTitle("Graph Stage");
+            //x axis
+            CategoryAxis x = new CategoryAxis();
+            x.setLabel("Digit");
+            //y axis
+            NumberAxis y = new NumberAxis();
+            y.setLabel("Percentage");
+            //bar chart creation
+            BarChart analysisLawGraph = new BarChart(x, y);
+            analysisLawGraph.setTitle("Benford's Distribution Leading Digit");
+            //add values
+            XYChart.Series benfordGraph = new XYChart.Series();
+            benfordGraph.getData().add(new XYChart.Data("1", takeInput[0] ));
+            benfordGraph.getData().add( new XYChart.Data("2", takeInput[1] ));
+            benfordGraph.getData().add(new XYChart.Data("3", takeInput[2] ));
+            benfordGraph.getData().add(new XYChart.Data("4", takeInput[3] ));
+            benfordGraph.getData().add(new XYChart.Data("5", takeInput[4] ));
+            benfordGraph.getData().add(new XYChart.Data("6", takeInput[5] ));
+            benfordGraph.getData().add(new XYChart.Data("7", takeInput[6] ));
+            benfordGraph.getData().add(new XYChart.Data("8", takeInput[7] ));
+            benfordGraph.getData().add(new XYChart.Data("9", takeInput[8] ));
+            analysisLawGraph.getData().add(benfordGraph);
+            analysisLawGraph.setLegendVisible(false);
+            //vertical box
+            VBox vbox = new VBox(analysisLawGraph);
+            Scene sc = new Scene(vbox, 800, 700);
+            stage.setScene(sc);
+            stage.setHeight(500);
+            stage.setWidth(600);
+            stage.show();   
+        }   
+    }
+    
+    public static void main(String[] args) throws FileNotFoundException{
+        Application.launch(args);
     }
 
     /*
@@ -143,22 +198,26 @@ class BenfordsLaw{
      * @param count - the array of counts for each first digit that occurs in the file
      * no return
      * */
-    public static void resultsOfFile(int[] count){
+    public static double[] resultsOfFile(int[] count){
         System.out.println(); // Spacing
         
         // Total rows in csv file
         int total = 1620;
+        double[] percentage = new double[9];
 
         System.out.println("Result:");
+
         // Loops through array of first digits and calculates each percentage
-        for (int i = 1; i < count.length; i++){
-            double percent = (count[i] * 100.0) / total;
+        for (int i = 0; i < count.length-1; i++){
+            double percent = (count[i+1] * 100.0) / total;
+            percentage[i] = percent;
 
             // First digit frequency is between 29% and 32%
             if (percent > 29 && percent < 32){
                 System.out.println("Fraud has likely NOT occured");
             }
         }
+        return percentage;
     }
 
     /*
