@@ -3,14 +3,14 @@
  * Names: Johnny He and Tiffany Liang
  * Teacher: Mr. Ho
  * Description: A sales analysis system that allows the user to load the sales data, checks if fraud has likely occured or not, 
- *              and prints a graph + table of the first digit distribution results 
- * */
+ *              and prints a bar graph + table of the first digit distribution results 
+ */
 
 import java.io.File;
 import java.io.FileNotFoundException; 
 import java.util.Scanner;
 import java.io.PrintWriter;
-//Importing JavaFX applications 
+// Importing JavaFX packages
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -22,12 +22,15 @@ import javafx.stage.Stage;
 
 public class BenfordsLaw extends Application {
 
-    @Override
+    // start method will become the new "main" method, so all the codes is able to work together
+     @Override
     public void start(Stage stage) throws Exception{
 
+        // Initialize variables
         String fraudCheck = "";
-        double[] takeInput = new double[9];
+        double[] percentageArray = new double[9];
 
+        // Output intro message
         System.out.println("Sales Analysis System");
         System.out.println(); 
 
@@ -55,7 +58,7 @@ public class BenfordsLaw extends Application {
             System.out.println("Enter y to check for possible accounting fraud or n to quit:");
             fraudCheck = reader.nextLine(); 
             if (fraudCheck.equals("y")){
-                takeInput = resultsOfFile(count);
+                percentageArray = resultsOfFile(count);
                 printTable(count); 
             }
             else if (fraudCheck.equals("n")){
@@ -85,7 +88,7 @@ public class BenfordsLaw extends Application {
                         System.out.println("Enter y to check for possible accounting fraud or n to quit:");
                         fraudCheck = reader.nextLine();
                         if (fraudCheck.equals("y")){
-                            takeInput = resultsOfFile(count);
+                            percentageArray = resultsOfFile(count);
                             printTable(count); 
                         }
                         else if (fraudCheck.equals("n")){
@@ -101,40 +104,43 @@ public class BenfordsLaw extends Application {
             }
         }
 
+        // Bar graph only display if user pass the above testing
         if ((start.equals("y") && (fraudCheck.equals("y")))) {
-            stage.setTitle("Graph Stage");
-            //x axis
+            stage.setTitle("Benfords Law Bar Graph");
+            // X axis
             CategoryAxis x = new CategoryAxis();
             x.setLabel("Digit");
-            //y axis
+            // Y axis
             NumberAxis y = new NumberAxis();
             y.setLabel("Percentage");
-            //bar chart creation
+            // Bar chart creation
             BarChart analysisLawGraph = new BarChart(x, y);
             analysisLawGraph.setTitle("Benford's Distribution Leading Digit");
-            //add values
+            // Inputs values
             XYChart.Series benfordGraph = new XYChart.Series();
-            benfordGraph.getData().add(new XYChart.Data("1", takeInput[0] ));
-            benfordGraph.getData().add( new XYChart.Data("2", takeInput[1] ));
-            benfordGraph.getData().add(new XYChart.Data("3", takeInput[2] ));
-            benfordGraph.getData().add(new XYChart.Data("4", takeInput[3] ));
-            benfordGraph.getData().add(new XYChart.Data("5", takeInput[4] ));
-            benfordGraph.getData().add(new XYChart.Data("6", takeInput[5] ));
-            benfordGraph.getData().add(new XYChart.Data("7", takeInput[6] ));
-            benfordGraph.getData().add(new XYChart.Data("8", takeInput[7] ));
-            benfordGraph.getData().add(new XYChart.Data("9", takeInput[8] ));
+            benfordGraph.getData().add(new XYChart.Data("1", percentageArray[0] ));
+            benfordGraph.getData().add( new XYChart.Data("2", percentageArray[1] ));
+            benfordGraph.getData().add(new XYChart.Data("3", percentageArray[2] ));
+            benfordGraph.getData().add(new XYChart.Data("4", percentageArray[3] ));
+            benfordGraph.getData().add(new XYChart.Data("5", percentageArray[4] ));
+            benfordGraph.getData().add(new XYChart.Data("6", percentageArray[5] ));
+            benfordGraph.getData().add(new XYChart.Data("7", percentageArray[6] ));
+            benfordGraph.getData().add(new XYChart.Data("8", percentageArray[7] ));
+            benfordGraph.getData().add(new XYChart.Data("9", percentageArray[8] ));
             analysisLawGraph.getData().add(benfordGraph);
+            // Bar graph won't display legend
             analysisLawGraph.setLegendVisible(false);
-            //vertical box
-            VBox vbox = new VBox(analysisLawGraph);
-            Scene sc = new Scene(vbox, 800, 700);
-            stage.setScene(sc);
+            // Bar graph window size modifications
+            VBox window = new VBox(analysisLawGraph);
+            Scene scene = new Scene(window, 800, 700);
+            stage.setScene(scene);
             stage.setHeight(500);
-            stage.setWidth(600);
+            stage.setWidth(750);
             stage.show();   
         }   
     }
     
+    // main method will only launch the application/start method
     public static void main(String[] args) throws FileNotFoundException{
         Application.launch(args);
     }
@@ -242,4 +248,5 @@ public class BenfordsLaw extends Application {
         System.out.println("Table has been generated");
         out.close();
     }
+}
 }
